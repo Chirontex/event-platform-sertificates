@@ -25,7 +25,7 @@ class Main
         $this->adminPageInit();
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false &&
-            $_GET['page'] === $this->admin_page) $this->adminScryptsStyles();
+            $_GET['page'] === $this->admin_page) $this->adminScriptsStyles();
 
     }
 
@@ -57,7 +57,7 @@ class Main
      * 
      * @return $this
      */
-    protected function adminScryptsStyles() : self
+    protected function adminScriptsStyles() : self
     {
 
         add_action('admin_enqueue_scripts', function() {
@@ -69,6 +69,13 @@ class Main
                 'css/bootstrap.min.css',
                 [],
                 '5.0.0-beta3'
+            );
+
+            wp_enqueue_style(
+                'epserts-admin',
+                $this->url.'css/admin.css',
+                [],
+                '0.1.0'
             );
 
             wp_enqueue_script(
