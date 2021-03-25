@@ -35,6 +35,10 @@ class ExceptionsList
         '-16' => [
             'message' => 'Data updating failure.',
             'code' => -16
+        ],
+        '-17' => [
+            'message' => 'Data deleting failure.',
+            'code' => -17
         ]
     ];
 

@@ -91,6 +91,7 @@ class SertificateSettings
      * Get setting by key.
      * 
      * @param string $key
+     * Cannot be empty.
      * 
      * @return string
      * 
@@ -184,6 +185,59 @@ class SertificateSettings
             );
 
         }
+
+        return $this;
+
+    }
+
+    /**
+     * Delete setting by key.
+     * 
+     * @param string $key
+     * Cannot be empty.
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\SertificateSettingsException
+     */
+    public function deleteByKey(string $key) : self
+    {
+
+        if (empty($key)) throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-13']['message'],
+            ExceptionsList::PROVIDERS['-13']['code']
+        );
+
+        if ($this->wpdb->delete(
+            $this->wpdb->prefix.$this->table,
+            ['key' => $key],
+            ['%s']
+        ) === false) throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-17']['message'],
+            ExceptionsList::PROVIDERS['-17']['code']
+        );
+
+        return $this;
+
+    }
+
+    /**
+     * Delete all settings.
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\SertificateSettingsException
+     */
+    public function deleteAll() : self
+    {
+
+        if ($this->wpdb->query(
+            "DELETE
+                FROM `".$this->wpdb->prefix.$this->table."`"
+        ) === false) throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-17']['message'],
+            ExceptionsList::PROVIDERS['-17']['code']
+        );
 
         return $this;
 
