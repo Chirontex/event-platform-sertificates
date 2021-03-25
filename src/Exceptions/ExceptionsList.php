@@ -23,6 +23,18 @@ class ExceptionsList
         '-13' => [
             'message' => 'Key cannot be empty.',
             'code' => -13
+        ],
+        '-14' => [
+            'message' => 'Value cannot be empty.',
+            'code' => -14
+        ],
+        '-15' => [
+            'message' => 'Data inserting failure.',
+            'code' => -15
+        ],
+        '-16' => [
+            'message' => 'Data updating failure.',
+            'code' => -16
         ]
     ];
 

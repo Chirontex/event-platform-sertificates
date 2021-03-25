@@ -129,4 +129,64 @@ class SertificateSettings
 
     }
 
+    /**
+     * Set the setting.
+     * 
+     * @param string $key
+     * Cannot be empty.
+     * If setting with this key already exist, it will be rewrite.
+     * 
+     * @param string $value
+     * Cannot be empty.
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\SertificateSettingsException
+     */
+    public function set(string $key, string $value) : self
+    {
+
+        if (empty($key)) throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-13']['message'],
+            ExceptionsList::PROVIDERS['-13']['code']
+        );
+
+        if (empty($value)) throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-14']['message'],
+            ExceptionsList::PROVIDERS['-14']['code']
+        );
+
+        if (empty($this->getByKey($key))) {
+
+            if ($this->wpdb->insert(
+                $this->wpdb->prefix.$this->table,
+                [
+                    'key' => $key,
+                    'value' => $value
+                ],
+                ['%s', '%s']
+            ) === false) throw new SertificateSettingsException(
+                ExceptionsList::PROVIDERS['-15']['message'],
+                ExceptionsList::PROVIDERS['-15']['code']
+            );
+
+        } else {
+
+            if ($this->wpdb->update(
+                $this->wpdb->prefix.$this->table,
+                ['value' => $value],
+                ['key' => $key],
+                ['%s'],
+                ['%s']
+            ) === false) throw new SertificateSettingsException(
+                ExceptionsList::PROVIDERS['-16']['message'],
+                ExceptionsList::PROVIDERS['-16']['code']
+            );
+
+        }
+
+        return $this;
+
+    }
+
 }
