@@ -52,4 +52,81 @@ class SertificateSettings
 
     }
 
+    /**
+     * Get all settings.
+     * 
+     * @return array
+     * 
+     * @throws EPSertificates\Exceptions\SertificateSettingsException
+     */
+    public function getAll() : array
+    {
+
+        $result = [];
+
+        $select = $this->wpdb->get_results(
+            "SELECT *
+                FROM `".$this->wpdb->prefix.$this->table."`",
+            ARRAY_A
+        );
+
+        if (is_array($select)) {
+
+            foreach ($select as $row) {
+
+                $result[$row['key']] = $row['value'];
+
+            }
+
+        } else throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-12']['message'],
+            ExceptionsList::PROVIDERS['-12']['code']
+        );
+
+        return $result;
+
+    }
+
+    /**
+     * Get setting by key.
+     * 
+     * @param string $key
+     * 
+     * @return string
+     * 
+     * @throws EPSertificates\Exceptions\SertificateSettingsException
+     */
+    public function getByKey(string $key) : string
+    {
+
+        if (empty($key)) throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-13']['message'],
+            ExceptionsList::PROVIDERS['-13']['code']
+        );
+
+        $result = '';
+
+        $select = $this->wpdb->get_results(
+            $this->wpdb->prepare(
+                "SELECT *
+                    FROM `".$this->wpdb->prefix.$this->table."` AS t
+                    WHERE t.key = %s",
+                $key
+            ),
+            ARRAY_A
+        );
+
+        if (is_array($select)) {
+
+            if (!empty($select)) $result = $select[0]['value'];
+
+        } else throw new SertificateSettingsException(
+            ExceptionsList::PROVIDERS['-12']['message'],
+            ExceptionsList::PROVIDERS['-12']['code']
+        );
+
+        return $result;
+
+    }
+
 }
