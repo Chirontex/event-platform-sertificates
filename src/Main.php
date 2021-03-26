@@ -5,6 +5,8 @@
 namespace EPSertificates;
 
 use EPSertificates\Providers\Users;
+use EPSertificates\Providers\SertificateSettings;
+use EPSertificates\Handlers\TemplateSettings;
 
 class Main
 {
@@ -31,6 +33,7 @@ class Main
                 
             $this
                 ->adminScriptsStyles()
+                ->filterFileUploaded()
                 ->filterUsersMetadata();
         
         }
@@ -121,6 +124,31 @@ class Main
             $users = new Users($this->wpdb);
 
             return $users->getMetadataList();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Add template upload checking to filter.
+     * 
+     * @return $this
+     */
+    protected function filterFileUploaded() : self
+    {
+
+        add_filter('epserts-file-uploaded', function($answer) {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb),
+                $this->path
+            );
+
+            if ($template_settings->checkTemplateUploaded()) $answer = 'да';
+
+            return $answer;
 
         });
 

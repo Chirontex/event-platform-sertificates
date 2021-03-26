@@ -55,7 +55,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <p class="text-center" style="font-size: 16px;">Опции написания:</p>
                                 <div class="form-group text-center">
-                                    <input type="checkbox" name="epserts-template-font-bolder" id="epserts-template-font-bolder" value="true">
+                                    <input type="checkbox" name="epserts-template-font-bolder" id="epserts-template-font-bolder" value="true" <?= apply_filters('epserts-template-font-bolder', '') ?>>
                                     <label for="epserts-template-font-bolder" class="form-label">Жирный</label>
                                 </div>
                             </div>
