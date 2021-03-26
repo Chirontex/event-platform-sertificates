@@ -9,11 +9,11 @@
             <label for="epserts-template-file-upload" class="form-label">Загрузить новый:</label>
             <div class="mb-3 input-group">
                 <input type="file" class="form-control form-control-sm" name="epserts-template-file-upload" id="epserts-template-file-upload" required="true">
-                <button class="button button-primary">Загрузить</button>
+                <button type="submit" class="button button-primary">Загрузить</button>
             </div>
         </form>
     </div>
-    <h4 class="my-5 text-center">Настройка шаблона</h4>
+    <h4 class="mt-5 mb-3 text-center">Настройка шаблона</h4>
     <form action="" method="post">
         <?php wp_nonce_field('epserts-template-settings', 'epserts-template-settings-wpnp') ?>
         <div class="row centered-column-900">
@@ -46,25 +46,55 @@
                         </div>
                     </div>
                     <h5 class="text-center my-3">Настройки шрифта</h5>
-                    
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <label for="epserts-template-fontsize" class="form-label">Размер шрифта:</label>
+                                <input type="number" class="form-control form-control-sm" name="epserts-template-fontsize" id="epserts-template-fontsize" value="<?= apply_filters('epserts-template-fontsize', 0) ?>">
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <p class="text-center" style="font-size: 16px;">Опции написания:</p>
+                                <div class="form-group text-center">
+                                    <input type="checkbox" name="epserts-template-font-bolder" id="epserts-template-font-bolder" value="true">
+                                    <label for="epserts-template-font-bolder" class="form-label">Жирный</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <div class="centered-column-400">
                     <h5 class="text-center my-3">Сопоставление метаданных</h5>
                     <div class="mb-3">
-                        <label for="epserts-template-user-lastname" class="form-label">Фамилия</label>
+                        <label for="epserts-template-user-lastname" class="form-label">Фамилия:</label>
                         <input type="text" class="form-control" name="epserts-template-user-lastname" id="epserts-template-user-lastname" list="epserts-users-metadata" value="<?= apply_filters('epserts-template-user-lastname', '') ?>" placeholder="Фамилия">
                     </div>
                     <div class="mb-3">
-                        <label for="epserts-template-user-name" class="form-label">Имя</label>
+                        <label for="epserts-template-user-name" class="form-label">Имя:</label>
                         <input type="text" class="form-control" name="epserts-template-user-name" id="epserts-template-user-name" list="epserts-users-metadata" value="<?= apply_filters('epserts-template-user-name', '') ?>" placeholder="Имя">
                     </div>
                     <div class="mb-3">
-                        <label for="epserts-template-user-middlename" class="form-label">Отчество</label>
+                        <label for="epserts-template-user-middlename" class="form-label">Отчество:</label>
                         <input type="text" class="form-control" name="epserts-template-user-middlename" id="epserts-template-user-middlename" list="epserts-users-metadata" value="<?= apply_filters('epserts-template-user-middlename', '') ?>" placeholder="Отчество">
                     </div>
+                    <datalist id="epserts-users-metadata">
+<?php
+
+foreach (apply_filters('epserts-users-metadata', []) as $meta) {
+
+?>
+                        <option value="<?= htmlspecialchars($meta) ?>">
+<?php
+
+}
+
+?>
+                    </datalist>
                 </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="button button-primary">Сохранить</button>
             </div>
         </div>
     </form>
