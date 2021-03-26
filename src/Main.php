@@ -75,7 +75,7 @@ class Main
                 'epserts-admin',
                 $this->url.'css/admin.css',
                 [],
-                '0.1.0'
+                '0.1.2'
             );
 
             wp_enqueue_script(
