@@ -42,4 +42,11 @@ class ExceptionsList
         ]
     ];
 
+    const TEMPLATE_SETTINGS = [
+        '-21' => [
+            'message' => 'Template file saving failure.',
+            'code' => -21
+        ]
+    ];
+
 }

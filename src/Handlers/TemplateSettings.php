@@ -5,6 +5,8 @@
 namespace EPSertificates\Handlers;
 
 use EPSertificates\Providers\SertificateSettings;
+use EPSertificates\Exceptions\TemplateSettingsException;
+use EPSertificates\Exceptions\ExceptionsList;
 
 class TemplateSettings
 {
@@ -36,6 +38,31 @@ class TemplateSettings
     {
 
         return file_exists($this->path.$this->file);
+
+    }
+
+    /**
+     * Save uploaded template.
+     * 
+     * @param string $file_content
+     * Template file content.
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\TemplateSettingsException
+     */
+    public function saveUploadedTemplate(string $file_content) : self
+    {
+
+        if (file_put_contents(
+            $this->path.$this->file,
+            $file_content
+        ) === false) throw new TemplateSettingsException(
+            ExceptionsList::TEMPLATE_SETTINGS['-21']['message'],
+            ExceptionsList::TEMPLATE_SETTINGS['-21']['code']
+        );
+
+        return $this;
 
     }
 

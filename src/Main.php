@@ -15,6 +15,7 @@ class Main
     protected $url;
     protected $wpdb;
     protected $admin_page = 'event-platform-sertificates-admin.php';
+    protected $admin_notice = [];
 
     public function __construct(string $path, string $url)
     {
@@ -149,6 +150,58 @@ class Main
             if ($template_settings->checkTemplateUploaded()) $answer = 'да';
 
             return $answer;
+
+        });
+
+        return $this;
+
+    }
+
+    protected function handleFileUploading() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['epserts-template-upload-wpnp'],
+                'epserts-template-upload'
+            ) === false) $this->adminNotify(
+                'danger',
+                'Произошла ошибка при отправке формы. Попробуйте ещё раз.'
+            );
+            else {
+
+                //
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    protected function adminNotify(string $type, string $text) : self
+    {
+
+        if ($type === 'danger') $type = 'error';
+
+        $this->admin_notice = [
+            'type' => $type,
+            'text' => $text
+        ];
+
+        add_action('admin_notices', function($prev_notices) {
+
+            ob_start();
+
+?>
+<div class="notice notice-<?= $this->admin_notice['type'] ?> is-dismissible" style="max-width: 500px; margin-left: auto; margin-right: auto;">
+    <p style="text-align: center;"><?= $this->admin_notice['text'] ?></p>
+</div>
+<?php
+
+            echo $prev_notices.ob_get_clean();
 
         });
 
