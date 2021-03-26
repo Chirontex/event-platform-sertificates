@@ -4,6 +4,8 @@
  */
 namespace EPSertificates;
 
+use EPSertificates\Providers\Users;
+
 class Main
 {
 
@@ -25,7 +27,13 @@ class Main
         $this->adminPageInit();
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false &&
-            strpos($_GET['page'], $this->admin_page) !== false) $this->adminScriptsStyles();
+            strpos($_GET['page'], $this->admin_page) !== false) {
+                
+            $this
+                ->adminScriptsStyles()
+                ->filterUsersMetadata();
+        
+        }
 
     }
 
@@ -93,6 +101,26 @@ class Main
                 [],
                 '0.1.0'
             );
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Add users metadata names list to filter.
+     * 
+     * @return $this
+     */
+    protected function filterUsersMetadata() : self
+    {
+
+        add_filter('epserts-users-metadata', function() {
+
+            $users = new Users($this->wpdb);
+
+            return $users->getMetadataList();
 
         });
 

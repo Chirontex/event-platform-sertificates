@@ -3,7 +3,7 @@
  * Plugin Name: Event Platform Sertificates
  * Plugin URI: https://github.com/chirontex/event-platform-sertificates
  * Description: Этот плагин позволяет выдавать участникам мероприятий именные сертификаты в PDF-формате.
- * Version: 0.1.3
+ * Version: 0.1.4
  * Author: Дмитрий Шумилин
  * Author URI: mailto://ds@brandpro.ru
  */
