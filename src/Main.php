@@ -87,6 +87,13 @@ class Main
                 '5.0.0-beta3'
             );
 
+            wp_enqueue_script(
+                'epserts-admin',
+                $this->url.'js/admin.js',
+                [],
+                '0.1.0'
+            );
+
         });
 
         return $this;

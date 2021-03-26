@@ -24,11 +24,11 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
                                 <label for="epserts-template-width" class="form-label">Ширина:</label>
-                                <input type="number" class="form-control form-control-sm" name="epserts-template-width" id="epserts-template-width" value="<?= apply_filters('epserts-template-width', 0) ?>">
+                                <input type="number" class="form-control form-control-sm" name="epserts-template-width" id="epserts-template-width" value="<?= apply_filters('epserts-template-width', 0) ?>" oninput="EPSertsAdmin.toZero('epserts-template-width');">
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
                                 <label for="epserts-template-height" class="form-label">Высота:</label>
-                                <input type="number" class="form-control form-control-sm" name="epserts-template-height" id="epserts-template-height" value="<?= apply_filters('epserts-template-height', 0) ?>">
+                                <input type="number" class="form-control form-control-sm" name="epserts-template-height" id="epserts-template-height" value="<?= apply_filters('epserts-template-height', 0) ?>" oninput="EPSertsAdmin.toZero('epserts-template-height');">
                             </div>
                         </div>
                     </div>
@@ -37,11 +37,11 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
                                 <label for="epserts-template-coordinate-x" class="form-label">Координата X:</label>
-                                <input type="number" class="form-control form-control-sm" name="epserts-template-coordinate-x" id="epserts-template-coordinate-x" value="<?= apply_filters('epserts-template-coordinate-x', 0) ?>">
+                                <input type="number" class="form-control form-control-sm" name="epserts-template-coordinate-x" id="epserts-template-coordinate-x" value="<?= apply_filters('epserts-template-coordinate-x', 0) ?>" oninput="EPSertsAdmin.toZero('epserts-template-coordinate-x');">
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
                                 <label for="epserts-template-coordinate-y" class="form-label">Координата Y:</label>
-                                <input type="number" class="form-control form-control-sm" name="epserts-template-coordinate-y" id="epserts-template-coordinate-y" value="<?= apply_filters('epserts-template-coordinate-y', 0) ?>">
+                                <input type="number" class="form-control form-control-sm" name="epserts-template-coordinate-y" id="epserts-template-coordinate-y" value="<?= apply_filters('epserts-template-coordinate-y', 0) ?>" oninput="EPSertsAdmin.toZero('epserts-template-coordinate-y');">
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <label for="epserts-template-fontsize" class="form-label">Размер шрифта:</label>
-                                <input type="number" class="form-control form-control-sm" name="epserts-template-fontsize" id="epserts-template-fontsize" value="<?= apply_filters('epserts-template-fontsize', 0) ?>">
+                                <input type="number" class="form-control form-control-sm" name="epserts-template-fontsize" id="epserts-template-fontsize" value="<?= apply_filters('epserts-template-fontsize', 0) ?>" oninput="EPSertsAdmin.toZero('epserts-template-fontsize');">
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <p class="text-center" style="font-size: 16px;">Опции написания:</p>
