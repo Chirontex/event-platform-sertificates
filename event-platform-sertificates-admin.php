@@ -8,7 +8,7 @@
             <?php wp_nonce_field('epserts-template-upload', 'epserts-template-upload-wpnp') ?>
             <label for="epserts-template-file-upload" class="form-label">Загрузить новый:</label>
             <div class="mb-3 input-group">
-                <input type="file" class="form-control form-control-sm" name="epserts-template-file-upload" id="epserts-template-file-upload">
+                <input type="file" class="form-control form-control-sm" name="epserts-template-file-upload" id="epserts-template-file-upload" required="true">
                 <button class="button button-primary">Загрузить</button>
             </div>
         </form>
