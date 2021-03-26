@@ -25,7 +25,7 @@ class Main
         $this->adminPageInit();
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false &&
-            $_GET['page'] === $this->admin_page) $this->adminScriptsStyles();
+            strpos($_GET['page'], $this->admin_page) !== false) $this->adminScriptsStyles();
 
     }
 
