@@ -44,19 +44,19 @@ class TemplateSettings
     /**
      * Save uploaded template.
      * 
-     * @param string $file_content
-     * Template file content.
+     * @param string $pathfile
+     * File temporary place.
      * 
      * @return $this
      * 
      * @throws EPSertificates\Exceptions\TemplateSettingsException
      */
-    public function saveUploadedTemplate(string $file_content) : self
+    public function saveUploadedTemplate(string $pathfile) : self
     {
 
-        if (file_put_contents(
-            $this->path.$this->file,
-            $file_content
+        if (move_uploaded_file(
+            $pathfile,
+            $this->path.$this->file
         ) === false) throw new TemplateSettingsException(
             ExceptionsList::TEMPLATE_SETTINGS['-21']['message'],
             ExceptionsList::TEMPLATE_SETTINGS['-21']['code']

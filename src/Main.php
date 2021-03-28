@@ -31,6 +31,8 @@ class Main
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false &&
             strpos($_GET['page'], $this->admin_page) !== false) {
+
+            if (isset($_FILES['epserts-template-file-upload'])) $this->handleFileUploading();
                 
             $this
                 ->adminScriptsStyles()
@@ -171,7 +173,24 @@ class Main
             );
             else {
 
-                //
+                $template_settings = new TemplateSettings(
+                    new SertificateSettings($this->wpdb),
+                    $this->path
+                );
+
+                $notice = 'Файл шаблона успешно %s.';
+
+                $notice = sprintf(
+                    $notice,
+                    $template_settings->checkTemplateUploaded() ?
+                        'заменён' : 'загружен'
+                );
+
+                $template_settings->saveUploadedTemplate(
+                    $_FILES['epserts-template-file-upload']['tmp_name']
+                );
+
+                $this->adminNotify('success', $notice);
 
             }
 
