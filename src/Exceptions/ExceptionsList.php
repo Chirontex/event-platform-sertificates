@@ -49,4 +49,11 @@ class ExceptionsList
         ]
     ];
 
+    const HANDLERS = [
+        '-31' => [
+            'message' => 'Incorrect value.',
+            'code' => -31
+        ]
+    ];
+
 }

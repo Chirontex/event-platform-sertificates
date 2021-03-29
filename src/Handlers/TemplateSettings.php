@@ -5,6 +5,8 @@
 namespace EPSertificates\Handlers;
 
 use EPSertificates\Providers\SertificateSettings;
+use EPSertificates\Exceptions\TemplateSettingsException;
+use EPSertificates\Exceptions\ExceptionsList;
 
 class TemplateSettings
 {
@@ -63,6 +65,164 @@ class TemplateSettings
         }
 
         return $this;
+
+    }
+
+    /**
+     * Set the width.
+     * 
+     * @param int $value
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\TemplateSettingsException
+     */
+    public function widthSet(int $value) : self
+    {
+
+        if ($value < 0) throw new TemplateSettingsException(
+            ExceptionsList::HANDLERS['-31']['message'],
+            ExceptionsList::HANDLERS['-31']['code']
+        );
+
+        $this->settings['width'] = (string)$value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the width.
+     * 
+     * @return int
+     */
+    public function widthGet() : int
+    {
+
+        $result = 0;
+
+        if (isset(
+            $this->settings['width']
+        )) $result = (int)$this->settings['width'];
+
+        return $result;
+
+    }
+
+    /**
+     * Set the height.
+     * 
+     * @param int $value
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\TemplateSettingsException
+     */
+    public function heightSet(int $value) : self
+    {
+
+        if ($value < 0) throw new TemplateSettingsException(
+            ExceptionsList::HANDLERS['-31']['message'],
+            ExceptionsList::HANDLERS['-31']['code']
+        );
+
+        $this->settings['height'] = (string)$value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the height.
+     * 
+     * @return int
+     */
+    public function heightGet() : int
+    {
+
+        $result = 0;
+
+        if (isset(
+            $this->settings['height']
+        )) $result = (int)$this->settings['height'];
+
+        return $result;
+
+    }
+
+    /**
+     * Set the X coordinate.
+     * 
+     * @param int $value
+     * 
+     * @return $this
+     */
+    public function xSet(int $value) : self
+    {
+
+        if ($value < 0) throw new TemplateSettingsException(
+            ExceptionsList::HANDLERS['-31']['message'],
+            ExceptionsList::HANDLERS['-31']['code']
+        );
+
+        $this->settings['x'] = (string)$value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the X coordinate.
+     * 
+     * @return int
+     */
+    public function xGet() : int
+    {
+
+        $result = 0;
+
+        if (isset($this->settings['x'])) $result = (int)$this->settings['x'];
+
+        return $result;
+
+    }
+
+    /**
+     * Set the Y coordinate.
+     * 
+     * @param int $value
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\TemplateSettingsException
+     */
+    public function ySet(int $value) : self
+    {
+
+        if ($value < 0) throw new TemplateSettingsException(
+            ExceptionsList::HANDLERS['-31']['message'],
+            ExceptionsList::HANDLERS['-31']['code']
+        );
+
+        $this->settings['y'] = (string)$value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the Y coordinate.
+     * 
+     * @return int
+     */
+    public function yGet() : int
+    {
+
+        $result = 0;
+
+        if (isset($this->settings['y'])) $result = (int)$this->settings['y'];
+
+        return $result;
 
     }
 
