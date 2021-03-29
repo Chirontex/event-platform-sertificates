@@ -588,7 +588,13 @@ class Main
                         (float)$template_settings->widthGet(),
                         (float)$template_settings->heightGet()
                     );
-                    $template->readImage($template_file->getTemplatePath());
+
+                    if (!$template->readImage(
+                        $template_file->getTemplatePath()
+                    )) throw new MainException(
+                        ExceptionsList::COMMON['-2']['message'],
+                        ExceptionsList::COMMON['-2']['code']
+                    );
 
                     $draw = new ImagickDraw;
                     $draw->setFontSize((float)$template_settings->fontSizeGet());
