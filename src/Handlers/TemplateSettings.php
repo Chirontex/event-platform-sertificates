@@ -226,4 +226,178 @@ class TemplateSettings
 
     }
 
+    /**
+     * Set font size.
+     * 
+     * @param int $value
+     * 
+     * @return $this
+     * 
+     * @throws EPSertificates\Exceptions\TemplateSettingsException
+     */
+    public function FontSizeSet(int $value) : self
+    {
+
+        if ($value < 0) throw new TemplateSettingsException(
+            ExceptionsList::HANDLERS['-31']['message'],
+            ExceptionsList::HANDLERS['-31']['code']
+        );
+
+        $this->settings['font_size'] = (string)$value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get font size.
+     * 
+     * @return int
+     */
+    public function FontSizeGet() : int
+    {
+
+        $result = 0;
+
+        if (isset(
+            $this->settings['font_size']
+        )) $result = (int)$this->settings['font_size'];
+
+        return $result;
+
+    }
+
+    /**
+     * Set bolder font weight.
+     * 
+     * @return $this
+     */
+    public function bolderSet() : self
+    {
+
+        $this->settings['bolder'] = '1';
+
+        return $this;
+
+    }
+
+    /**
+     * Get if font is bolder.
+     * 
+     * @return bool
+     */
+    public function bolderGet() : bool
+    {
+
+        $result = false;
+
+        if (isset(
+            $this->settings['bolder']
+        )) $result = $this->settings['bolder'] === '1' ?
+            true : $result;
+
+        return $result;
+
+    }
+
+    /**
+     * Set last name.
+     * 
+     * @param string $value
+     * 
+     * @return $this
+     */
+    public function lastnameSet(string $value) : self
+    {
+
+        $this->settings['last_name'] = $value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get last name.
+     * 
+     * @return string
+     */
+    public function lastnameGet() : string
+    {
+
+        $result = '';
+
+        if (isset(
+            $this->settings['last_name']
+        )) $result = $this->settings['last_name'];
+
+        return $result;
+
+    }
+
+    /**
+     * Set middle name.
+     * 
+     * @param string $value
+     * 
+     * @return $this
+     */
+    public function middlenameSet(string $value) : self
+    {
+
+        $this->settings['middle_name'] = $value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get middle name.
+     * 
+     * @return string
+     */
+    public function middlenameGet() : string
+    {
+
+        $result = '';
+
+        if (isset(
+            $this->settings['middle_name']
+        )) $result = $this->settings['middle_name'];
+
+        return $result;
+
+    }
+
+    /**
+     * Set first name.
+     * 
+     * @return $this
+     */
+    public function firstnameSet(string $value) : self
+    {
+
+        $this->settings['first_name'] = $value;
+
+        return $this;
+
+    }
+
+    /**
+     * Get first name.
+     * 
+     * @return string
+     */
+    public function firstnameGet() : string
+    {
+
+        $result = '';
+
+        if (isset(
+            $this->settings['first_name']
+        )) $result = $this->settings['first_name'];
+
+        return $result;
+
+    }
+
 }
