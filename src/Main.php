@@ -40,11 +40,17 @@ class Main
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false &&
             strpos($_GET['page'], $this->admin_page) !== false) {
 
-            if (isset($_FILES['epserts-template-file-upload'])) $this->handleFileUploading();
+            if (isset(
+                $_FILES['epserts-template-file-upload']
+            )) $this->handleFileUploading();
 
-            if (isset($_POST['epserts-template-download-wpnp'])) $this->handleFileDownloading();
+            if (isset(
+                $_POST['epserts-template-download-wpnp']
+            )) $this->handleFileDownloading();
 
-            if (isset($_POST['epserts-template-settings-wpnp'])) $this->handleTemplateSettings();
+            if (isset(
+                $_POST['epserts-template-settings-wpnp']
+            )) $this->handleTemplateSettings();
                 
             $this
                 ->adminScriptsStyles()
@@ -61,6 +67,10 @@ class Main
                 ->filterUsersMetadata();
         
         }
+
+        if (isset(
+            $_POST['epserts-download-sertificate-wpnp']
+        )) $this->downloadCompleteSertificate();
 
     }
 
@@ -639,7 +649,7 @@ class Main
                     unlink($temp_dir.$filename);
 
                     header('Content-type: application; charset=utf-8');
-                    header('Content-disposition: attachment; filename=sertificate.pdf');
+                    header('Content-disposition: attachment; filename=certificate.pdf');
 
                     echo $sertificate;
 
