@@ -546,6 +546,11 @@ class Main
 
     }
 
+    /**
+     * Initialize sertificate downloading.
+     * 
+     * @return $this
+     */
     protected function downloadCompleteSertificate() : self
     {
 
