@@ -8,7 +8,14 @@ class ExceptionsList
 {
 
     const COMMON = [
-
+        '-1' => [
+            'message' => 'File creation failure.',
+            'code' => -1
+        ],
+        '-2' => [
+            'message' => 'File reading failure.',
+            'code' => -2
+        ]
     ];
 
     const PROVIDERS = [

@@ -8,6 +8,10 @@ use EPSertificates\Providers\Users;
 use EPSertificates\Providers\SertificateSettings;
 use EPSertificates\Handlers\TemplateFile;
 use EPSertificates\Handlers\TemplateSettings;
+use EPSertificates\Exceptions\MainException;
+use EPSertificates\Exceptions\ExceptionsList;
+use Imagick;
+use ImagickDraw;
 
 class Main
 {
@@ -602,7 +606,45 @@ class Main
 
                 if (!file_exists($temp_dir)) mkdir($temp_dir);
 
-                //
+                $arr = array_merge(range('a', 'z'), range(0, 9));
+
+                do {
+
+                    $filename = '';
+
+                    for ($i = 0; $i < 32; $i++) {
+
+                        $filename .= $arr[rand(0, count($arr) - 1)];
+
+                    }
+
+                    $filename .= '.pdf';
+
+                } while (file_exists($temp_dir.$filename));
+
+                if ($template->writeImage($temp_dir.$filename)) {
+
+                    $sertificate = file_get_contents($temp_dir.$filename);
+
+                    if (!$sertificate) throw new MainException(
+                        ExceptionsList::COMMON['-2']['message'],
+                        ExceptionsList::COMMON['-2']['code']
+                    );
+
+                    unlink($temp_dir.$filename);
+
+                    header('Content-type: application; charset=utf-8');
+                    header('Content-disposition: attachment; filename=sertificate.pdf');
+
+                    echo $sertificate;
+
+                    die;
+
+                } else throw new MainException(
+                    ExceptionsList::COMMON['-1']['message'].
+                        ' ('.$temp_dir.$filename.')',
+                    ExceptionsList::COMMON['-1']['code']
+                );
 
             }
 
