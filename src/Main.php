@@ -566,100 +566,120 @@ class Main
 
         add_action('plugins_loaded', function() {
 
-            if (wp_verify_nonce(
-                $_POST['epserts-download-sertificate-wpnp'],
-                'epserts-download-sertificate'
-            ) !== false) {
+            $user_id = get_current_user_id();
 
-                $template_file = new TemplateFile($this->path);
+            if ($user_id > 0) {
 
-                $template_settings = new TemplateSettings(
-                    new SertificateSettings($this->wpdb)
-                );
+                if (wp_verify_nonce(
+                    $_POST['epserts-download-sertificate-wpnp'],
+                    'epserts-download-sertificate'
+                ) !== false) {
 
-                $template = new Imagick;
-                $template->setResolution(
-                    $template_settings->xGet(),
-                    $template_settings->yGet()
-                );
-                $template->readImage($template_file->getTemplatePath());
+                    $template_file = new TemplateFile($this->path);
 
-                $draw = new ImagickDraw;
-                $draw->setFontSize($template_settings->fontSizeGet());
-
-                if ($template_settings->bolderGet()) $draw->setFontWeight(600);
-
-                $y1 = $template_settings->yGet() + (empty(
-                    $template_settings->middlenameGet()
-                ) ? (int)(($template_settings->fontSizeGet() * 4.5)/2) : 0);
-
-                $draw->annotation(
-                    $template_settings->xGet(),
-                    $y1,
-                    implode(' ', [
-                        $template_settings->firstnameGet(),
-                        $template_settings->lastnameGet()
-                    ])
-                );
-
-                if (!empty($template_settings->middlenameGet())) {
-
-                    $y2 = $template_settings->yGet();
-                    $y2 += (int)($template_settings->fontSizeGet() * 4.5);
-
-                    $draw->annotation(
-                        $template_settings->xGet(),
-                        $y2,
-                        $template_settings->middlenameGet()
+                    $template_settings = new TemplateSettings(
+                        new SertificateSettings($this->wpdb)
                     );
 
-                }
+                    $y_coefficient = 6;
 
-                $template->drawImage($draw);
+                    $template = new Imagick;
+                    $template->setResolution(
+                        (float)$template_settings->widthGet(),
+                        (float)$template_settings->heightGet()
+                    );
+                    $template->readImage($template_file->getTemplatePath());
 
-                $temp_dir = $template_file->getTemplateDir().'temp/';
+                    $draw = new ImagickDraw;
+                    $draw->setFontSize((float)$template_settings->fontSizeGet());
 
-                if (!file_exists($temp_dir)) mkdir($temp_dir);
+                    if ($template_settings->bolderGet()) $draw->setFontWeight(600);
 
-                $arr = array_merge(range('a', 'z'), range(0, 9));
+                    $y1 = $template_settings->yGet() + (empty(
+                        $template_settings->middlenameGet()
+                    ) ? (int)(($template_settings->fontSizeGet() * $y_coefficient)/2) : 0);
 
-                do {
+                    $query = "SELECT t.meta_value
+                        FROM `".$this->wpdb->prefix."usermeta` AS t
+                        WHERE t.user_id = '".$user_id."'
+                        AND t.meta_key = '%s'";
 
-                    $filename = '';
+                    $first_name = $this->wpdb->get_var(
+                        sprintf($query, $template_settings->firstnameGet())
+                    );
 
-                    for ($i = 0; $i < 32; $i++) {
+                    $last_name = $this->wpdb->get_var(
+                        sprintf($query, $template_settings->lastnameGet())
+                    );
 
-                        $filename .= $arr[rand(0, count($arr) - 1)];
+                    $draw->annotation(
+                        (float)$template_settings->xGet(),
+                        (float)$y1,
+                        implode(' ', [$last_name, $first_name])
+                    );
+
+                    if (!empty($template_settings->middlenameGet())) {
+
+                        $y2 = $template_settings->yGet();
+                        $y2 += (int)($template_settings->fontSizeGet() * $y_coefficient);
+
+                        $draw->annotation(
+                            (float)$template_settings->xGet(),
+                            (float)$y2,
+                            $this->wpdb->get_var(
+                                sprintf($query, $template_settings->middlenameGet())
+                            )
+                        );
 
                     }
 
-                    $filename .= '.pdf';
+                    $template->drawImage($draw);
 
-                } while (file_exists($temp_dir.$filename));
+                    $temp_dir = $template_file->getTemplateDir().'temp/';
 
-                if ($template->writeImage($temp_dir.$filename)) {
+                    if (!file_exists($temp_dir)) mkdir($temp_dir);
 
-                    $sertificate = file_get_contents($temp_dir.$filename);
+                    $arr = array_merge(range('a', 'z'), range(0, 9));
 
-                    if (!$sertificate) throw new MainException(
-                        ExceptionsList::COMMON['-2']['message'],
-                        ExceptionsList::COMMON['-2']['code']
+                    do {
+
+                        $filename = '';
+
+                        for ($i = 0; $i < 32; $i++) {
+
+                            $filename .= $arr[rand(0, count($arr) - 1)];
+
+                        }
+
+                        $filename .= '.pdf';
+
+                    } while (file_exists($temp_dir.$filename));
+
+                    if ($template->writeImage($temp_dir.$filename)) {
+
+                        $sertificate = file_get_contents($temp_dir.$filename);
+
+                        if (!$sertificate) throw new MainException(
+                            ExceptionsList::COMMON['-2']['message'],
+                            ExceptionsList::COMMON['-2']['code']
+                        );
+
+                        unlink($temp_dir.$filename);
+
+                        header('Content-type: application; charset=utf-8');
+                        header('Content-disposition: attachment; filename=certificate.pdf');
+
+                        echo $sertificate;
+
+                        die;
+
+                    } else throw new MainException(
+                        ExceptionsList::COMMON['-1']['message'].
+                            ' ('.$temp_dir.$filename.')',
+                        ExceptionsList::COMMON['-1']['code']
                     );
 
-                    unlink($temp_dir.$filename);
-
-                    header('Content-type: application; charset=utf-8');
-                    header('Content-disposition: attachment; filename=certificate.pdf');
-
-                    echo $sertificate;
-
-                    die;
-
-                } else throw new MainException(
-                    ExceptionsList::COMMON['-1']['message'].
-                        ' ('.$temp_dir.$filename.')',
-                    ExceptionsList::COMMON['-1']['code']
-                );
+                }
 
             }
 
