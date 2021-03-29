@@ -595,10 +595,6 @@ class Main
 
                     if ($template_settings->bolderGet()) $draw->setFontWeight(600);
 
-                    $y1 = $template_settings->yGet() + (empty(
-                        $template_settings->middlenameGet()
-                    ) ? (int)(($template_settings->fontSizeGet() * $y_coefficient)/2) : 0);
-
                     $query = "SELECT t.meta_value
                         FROM `".$this->wpdb->prefix."usermeta` AS t
                         WHERE t.user_id = '".$user_id."'
@@ -612,13 +608,20 @@ class Main
                         sprintf($query, $template_settings->lastnameGet())
                     );
 
+                    $middle_name = $this->wpdb->get_var(
+                        sprintf($query, $template_settings->middlenameGet())
+                    );
+
+                    $y1 = $template_settings->yGet() + (empty($middle_name) ?
+                        (int)(($template_settings->fontSizeGet() * $y_coefficient)/2) : 0);
+
                     $draw->annotation(
                         (float)$template_settings->xGet(),
                         (float)$y1,
-                        implode(' ', [$last_name, $first_name])
+                        implode(' ', [trim($last_name), trim($first_name)])
                     );
 
-                    if (!empty($template_settings->middlenameGet())) {
+                    if (!empty($middle_name)) {
 
                         $y2 = $template_settings->yGet();
                         $y2 += (int)($template_settings->fontSizeGet() * $y_coefficient);
@@ -626,9 +629,7 @@ class Main
                         $draw->annotation(
                             (float)$template_settings->xGet(),
                             (float)$y2,
-                            $this->wpdb->get_var(
-                                sprintf($query, $template_settings->middlenameGet())
-                            )
+                            $middle_name
                         );
 
                     }
