@@ -7,6 +7,7 @@ namespace EPSertificates;
 use EPSertificates\Providers\Users;
 use EPSertificates\Providers\SertificateSettings;
 use EPSertificates\Handlers\TemplateFile;
+use EPSertificates\Handlers\TemplateSettings;
 
 class Main
 {
@@ -36,6 +37,8 @@ class Main
             if (isset($_FILES['epserts-template-file-upload'])) $this->handleFileUploading();
 
             if (isset($_POST['epserts-template-download-wpnp'])) $this->handleFileDownloading();
+
+            if (isset($_POST['epserts-template-settings-wpnp'])) $this->handleTemplateSettings();
                 
             $this
                 ->adminScriptsStyles()
@@ -231,6 +234,70 @@ class Main
                 echo $content;
 
                 die;
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Handle template settings.
+     * 
+     * @return $this
+     */
+    protected function handleTemplateSettings() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['epserts-template-settings-wpnp'],
+                'epserts-template-settings'
+            ) === false) $this->adminNotify('danger', $this->form_failed_text);
+            else {
+
+                $template_settings = new TemplateSettings(
+                    new SertificateSettings($this->wpdb)
+                );
+
+                $template_settings
+                    ->widthSet((int)$_POST['epserts-template-width'])
+                    ->heightSet((int)$_POST['epserts-template-height'])
+                    ->xSet((int)$_POST['epserts-template-coordinate-x'])
+                    ->ySet((int)$_POST['epserts-template-coordinate-y'])
+                    ->FontSizeSet((int)$_POST['epserts-template-fontsize']);
+
+                if (isset(
+                    $_POST['epserts-template-font-bolder']
+                )) $template_settings->bolderSet();
+
+                if (!empty(
+                    $_POST['epserts-template-user-lastname']
+                )) $template_settings->lastnameSet(
+                    trim($_POST['epserts-template-user-lastname'])
+                );
+
+                if (!empty(
+                    $_POST['epserts-template-user-middlename']
+                )) $template_settings->middlenameSet(
+                    trim($_POST['epserts-template-user-middlename'])
+                );
+
+                if (!empty(
+                    $_POST['epserts-template-user-name']
+                )) $template_settings->firstnameSet(
+                    trim($_POST['epserts-template-user-name'])
+                );
+
+                $template_settings->settingsSave();
+
+                $this->adminNotify(
+                    'success',
+                    'Настройки шаблона сохранены.'
+                );
 
             }
 

@@ -12,7 +12,7 @@ class SertificateSettings
 {
 
     protected $wpdb;
-    protected $table = 'eps_sertificate_settings';
+    protected $table = 'epsertificates_settings';
 
     public function __construct(wpdb $wpdb)
     {
