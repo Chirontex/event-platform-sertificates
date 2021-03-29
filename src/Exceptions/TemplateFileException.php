@@ -6,7 +6,7 @@ namespace EPSertificates\Exceptions;
 
 use Exception;
 
-class TemplateSettingsException extends Exception
+class TemplateFileException extends Exception
 {
 
     

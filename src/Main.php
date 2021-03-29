@@ -6,7 +6,7 @@ namespace EPSertificates;
 
 use EPSertificates\Providers\Users;
 use EPSertificates\Providers\SertificateSettings;
-use EPSertificates\Handlers\TemplateSettings;
+use EPSertificates\Handlers\TemplateFile;
 
 class Main
 {
@@ -147,12 +147,9 @@ class Main
 
         add_filter('epserts-file-uploaded', function($answer) {
 
-            $template_settings = new TemplateSettings(
-                new SertificateSettings($this->wpdb),
-                $this->path
-            );
+            $template_file = new TemplateFile($this->path);
 
-            if ($template_settings->checkTemplateUploaded()) $answer = 'да';
+            if ($template_file->checkTemplateUploaded()) $answer = 'да';
 
             return $answer;
 
@@ -181,20 +178,17 @@ class Main
             );
             else {
 
-                $template_settings = new TemplateSettings(
-                    new SertificateSettings($this->wpdb),
-                    $this->path
-                );
+                $template_file = new TemplateFile($this->path);
 
                 $notice = 'Файл шаблона успешно %s.';
 
                 $notice = sprintf(
                     $notice,
-                    $template_settings->checkTemplateUploaded() ?
+                    $template_file->checkTemplateUploaded() ?
                         'заменён' : 'загружен'
                 );
 
-                $template_settings->saveUploadedTemplate(
+                $template_file->saveUploadedTemplate(
                     $_FILES['epserts-template-file-upload']['tmp_name']
                 );
 
@@ -227,15 +221,12 @@ class Main
             );
             else {
 
-                $template_settings = new TemplateSettings(
-                    new SertificateSettings($this->wpdb),
-                    $this->path
-                );
+                $template_file = new TemplateFile($this->path);
 
-                $content = $template_settings->getTemplateContent();
+                $content = $template_file->getTemplateContent();
 
                 header('Content-type: application; charset=utf-8');
-                header('Content-disposition: attachment; filename='.$template_settings->getTemplateFilename());
+                header('Content-disposition: attachment; filename='.$template_file->getTemplateFilename());
 
                 echo $content;
 

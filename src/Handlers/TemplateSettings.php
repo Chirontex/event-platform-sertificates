@@ -5,118 +5,64 @@
 namespace EPSertificates\Handlers;
 
 use EPSertificates\Providers\SertificateSettings;
-use EPSertificates\Exceptions\TemplateSettingsException;
-use EPSertificates\Exceptions\ExceptionsList;
 
 class TemplateSettings
 {
 
-    protected $sertset;
-    protected $path;
-    protected $file = 'template.pdf';
+    protected $sertificate_settings;
+    protected $settings = [];
 
-    public function __construct(SertificateSettings $sertificate_settings, string $main_path)
+    public function __construct(SertificateSettings $sertificate_settings)
     {
         
-        $this->sertset = $sertificate_settings;
+        $this->sertificate_settings = $sertificate_settings;
 
-        if (substr($main_path, - 1) !== '/' ||
-            substr($main_path, -1) !== '\\') $main_path .= '/';
-
-        $this->path = $main_path.'usr/';
-
-        if (!file_exists($this->path)) mkdir($this->path);
+        $this->settingsLoad();
 
     }
 
     /**
-     * Check if template was uploaded.
-     * 
-     * @return bool
-     */
-    public function checkTemplateUploaded() : bool
-    {
-
-        return file_exists($this->path.$this->file);
-
-    }
-
-    /**
-     * Save uploaded template.
-     * 
-     * @param string $pathfile
-     * File temporary place.
+     * Load settings to this object.
      * 
      * @return $this
-     * 
-     * @throws EPSertificates\Exceptions\TemplateSettingsException
      */
-    public function saveUploadedTemplate(string $pathfile) : self
+    public function settingsLoad() : self
     {
 
-        if (move_uploaded_file(
-            $pathfile,
-            $this->path.$this->file
-        ) === false) throw new TemplateSettingsException(
-            ExceptionsList::TEMPLATE_SETTINGS['-21']['message'],
-            ExceptionsList::TEMPLATE_SETTINGS['-21']['code']
-        );
+        $this->settings = $this->sertificate_settings->getAll();
 
         return $this;
 
     }
 
     /**
-     * Return template file directory.
+     * Get loaded settings.
      * 
-     * @return string
+     * @return array
      */
-    public function getTemplateDir() : string
+    public function settingsGet() : array
     {
 
-        return $this->path;
+        return $this->settings;
 
     }
 
     /**
-     * Return template file path.
+     * Save the settings stored in this object.
      * 
-     * @return string
+     * @return $this
      */
-    public function getTemplatePath() : string
+    public function settingsSave() : self
     {
 
-        return $this->path.$this->file;
+        foreach ($this->settings as $key => $value) {
 
-    }
+            if (empty($value)) $this->sertificate_settings->deleteByKey($key);
+            else $this->sertificate_settings->set($key, (string)$value);
 
-    /**
-     * Return template file name.
-     * 
-     * @return string
-     */
-    public function getTemplateFilename() : string
-    {
+        }
 
-        return $this->file;
-
-    }
-
-    /**
-     * Read template file.
-     * 
-     * @return string
-     */
-    public function getTemplateContent() : string
-    {
-
-        $result = '';
-
-        if ($this->checkTemplateUploaded()) $result = file_get_contents(
-            $this->path.$this->file
-        );
-
-        return $result;
+        return $this;
 
     }
 
