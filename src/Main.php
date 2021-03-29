@@ -542,6 +542,76 @@ class Main
 
     }
 
+    protected function downloadCompleteSertificate() : self
+    {
+
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['epserts-download-sertificate-wpnp'],
+                'epserts-download-sertificate'
+            ) !== false) {
+
+                $template_file = new TemplateFile($this->path);
+
+                $template_settings = new TemplateSettings(
+                    new SertificateSettings($this->wpdb)
+                );
+
+                $template = new Imagick;
+                $template->setResolution(
+                    $template_settings->xGet(),
+                    $template_settings->yGet()
+                );
+                $template->readImage($template_file->getTemplatePath());
+
+                $draw = new ImagickDraw;
+                $draw->setFontSize($template_settings->fontSizeGet());
+
+                if ($template_settings->bolderGet()) $draw->setFontWeight(600);
+
+                $y1 = $template_settings->yGet() + (empty(
+                    $template_settings->middlenameGet()
+                ) ? (int)(($template_settings->fontSizeGet() * 4.5)/2) : 0);
+
+                $draw->annotation(
+                    $template_settings->xGet(),
+                    $y1,
+                    implode(' ', [
+                        $template_settings->firstnameGet(),
+                        $template_settings->lastnameGet()
+                    ])
+                );
+
+                if (!empty($template_settings->middlenameGet())) {
+
+                    $y2 = $template_settings->yGet();
+                    $y2 += (int)($template_settings->fontSizeGet() * 4.5);
+
+                    $draw->annotation(
+                        $template_settings->xGet(),
+                        $y2,
+                        $template_settings->middlenameGet()
+                    );
+
+                }
+
+                $template->drawImage($draw);
+
+                $temp_dir = $template_file->getTemplateDir().'temp/';
+
+                if (!file_exists($temp_dir)) mkdir($temp_dir);
+
+                //
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
     /**
      * Create admin notice.
      * 
