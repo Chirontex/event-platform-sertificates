@@ -43,6 +43,15 @@ class Main
             $this
                 ->adminScriptsStyles()
                 ->filterFileUploaded()
+                ->filterTemplateWidth()
+                ->filterTemplateHeight()
+                ->filterTemplateCoordinateX()
+                ->filterTemplateCoordinateY()
+                ->filterTemplateFontSize()
+                ->filterTemplateFontBolder()
+                ->filterTemplateLastname()
+                ->filterTemplateFirstname()
+                ->filterTemplateMiddlename()
                 ->filterUsersMetadata();
         
         }
@@ -268,29 +277,20 @@ class Main
                     ->heightSet((int)$_POST['epserts-template-height'])
                     ->xSet((int)$_POST['epserts-template-coordinate-x'])
                     ->ySet((int)$_POST['epserts-template-coordinate-y'])
-                    ->FontSizeSet((int)$_POST['epserts-template-fontsize']);
-
-                if (isset(
-                    $_POST['epserts-template-font-bolder']
-                )) $template_settings->bolderSet();
-
-                if (!empty(
-                    $_POST['epserts-template-user-lastname']
-                )) $template_settings->lastnameSet(
-                    trim($_POST['epserts-template-user-lastname'])
-                );
-
-                if (!empty(
-                    $_POST['epserts-template-user-middlename']
-                )) $template_settings->middlenameSet(
-                    trim($_POST['epserts-template-user-middlename'])
-                );
-
-                if (!empty(
-                    $_POST['epserts-template-user-name']
-                )) $template_settings->firstnameSet(
-                    trim($_POST['epserts-template-user-name'])
-                );
+                    ->FontSizeSet((int)$_POST['epserts-template-fontsize'])
+                    ->bolderSet(isset($_POST['epserts-template-font-bolder']))
+                    ->lastnameSet(
+                        empty($_POST['epserts-template-user-lastname']) ?
+                        '' : trim($_POST['epserts-template-user-lastname'])
+                    )
+                    ->middlenameSet(
+                        empty($_POST['epserts-template-user-middlename']) ?
+                        '' : trim($_POST['epserts-template-user-middlename'])
+                    )
+                    ->firstnameSet(
+                        empty($_POST['epserts-template-user-name']) ?
+                        '' : trim($_POST['epserts-template-user-name'])
+                    );
 
                 $template_settings->settingsSave();
 
@@ -300,6 +300,205 @@ class Main
                 );
 
             }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter template width.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateWidth() : self
+    {
+
+        add_filter('epserts-template-width', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->widthGet();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter template height.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateHeight() : self
+    {
+
+        add_filter('epserts-template-height', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->heightGet();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter X coordinate.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateCoordinateX() : self
+    {
+
+        add_filter('epserts-template-coordinate-x', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->xGet();
+
+        });
+
+        return $this;
+        
+    }
+
+    /**
+     * Filter Y coordinate.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateCoordinateY() : self
+    {
+
+        add_filter('epserts-template-coordinate-y', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->yGet();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter font size.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateFontSize() : self
+    {
+
+        add_filter('epserts-template-fontsize', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->fontSizeGet();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter if font is bolder.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateFontBolder() : self
+    {
+
+        add_filter('epserts-template-font-bolder', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->bolderGet() ?
+                'checked="true"' : '';
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter lastname metadata name.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateLastname() : self
+    {
+
+        add_filter('epserts-template-user-lastname', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->lastnameGet();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter firstname metadata name.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateFirstname() : self
+    {
+
+        add_filter('epserts-template-user-name', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->firstnameGet();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Filter middlename metadata name.
+     * 
+     * @return $this
+     */
+    protected function filterTemplateMiddlename() : self
+    {
+
+        add_filter('epserts-template-user-middlename', function() {
+
+            $template_settings = new TemplateSettings(
+                new SertificateSettings($this->wpdb)
+            );
+
+            return $template_settings->middlenameGet();
 
         });
 

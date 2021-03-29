@@ -59,6 +59,10 @@ class TemplateSettings
 
         foreach ($this->settings as $key => $value) {
 
+            if ($key !== 'last_name' &&
+                $key !== 'middle_name' &&
+                $key !== 'first_name') $value = (int)$value;
+
             if (empty($value)) $this->sertificate_settings->deleteByKey($key);
             else $this->sertificate_settings->set($key, (string)$value);
 
@@ -235,7 +239,7 @@ class TemplateSettings
      * 
      * @throws EPSertificates\Exceptions\TemplateSettingsException
      */
-    public function FontSizeSet(int $value) : self
+    public function fontSizeSet(int $value) : self
     {
 
         if ($value < 0) throw new TemplateSettingsException(
@@ -254,7 +258,7 @@ class TemplateSettings
      * 
      * @return int
      */
-    public function FontSizeGet() : int
+    public function fontSizeGet() : int
     {
 
         $result = 0;
@@ -272,10 +276,10 @@ class TemplateSettings
      * 
      * @return $this
      */
-    public function bolderSet() : self
+    public function bolderSet(bool $on) : self
     {
 
-        $this->settings['bolder'] = '1';
+        $this->settings['bolder'] = $on ? '600' : '0';
 
         return $this;
 
@@ -293,7 +297,7 @@ class TemplateSettings
 
         if (isset(
             $this->settings['bolder']
-        )) $result = $this->settings['bolder'] === '1' ?
+        )) $result = $this->settings['bolder'] === '600' ?
             true : $result;
 
         return $result;
