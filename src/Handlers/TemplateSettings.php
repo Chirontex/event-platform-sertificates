@@ -66,4 +66,58 @@ class TemplateSettings
 
     }
 
+    /**
+     * Return template file directory.
+     * 
+     * @return string
+     */
+    public function getTemplateDir() : string
+    {
+
+        return $this->path;
+
+    }
+
+    /**
+     * Return template file path.
+     * 
+     * @return string
+     */
+    public function getTemplatePath() : string
+    {
+
+        return $this->path.$this->file;
+
+    }
+
+    /**
+     * Return template file name.
+     * 
+     * @return string
+     */
+    public function getTemplateFilename() : string
+    {
+
+        return $this->file;
+
+    }
+
+    /**
+     * Read template file.
+     * 
+     * @return string
+     */
+    public function getTemplateContent() : string
+    {
+
+        $result = '';
+
+        if ($this->checkTemplateUploaded()) $result = file_get_contents(
+            $this->path.$this->file
+        );
+
+        return $result;
+
+    }
+
 }

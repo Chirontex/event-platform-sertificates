@@ -16,6 +16,7 @@ class Main
     protected $wpdb;
     protected $admin_page = 'event-platform-sertificates-admin.php';
     protected $admin_notice = [];
+    protected $form_failed_text = 'Произошла ошибка при отправке формы. Попробуйте ещё раз.';
 
     public function __construct(string $path, string $url)
     {
@@ -33,6 +34,8 @@ class Main
             strpos($_GET['page'], $this->admin_page) !== false) {
 
             if (isset($_FILES['epserts-template-file-upload'])) $this->handleFileUploading();
+
+            if (isset($_POST['epserts-template-download-wpnp'])) $this->handleFileDownloading();
                 
             $this
                 ->adminScriptsStyles()
@@ -159,6 +162,11 @@ class Main
 
     }
 
+    /**
+     * Handle template file uploading.
+     * 
+     * @return $this
+     */
     protected function handleFileUploading() : self
     {
 
@@ -169,7 +177,7 @@ class Main
                 'epserts-template-upload'
             ) === false) $this->adminNotify(
                 'danger',
-                'Произошла ошибка при отправке формы. Попробуйте ещё раз.'
+                $this->form_failed_text
             );
             else {
 
@@ -199,7 +207,59 @@ class Main
         return $this;
 
     }
+    
+    /**
+     * Handle template file downloading.
+     * 
+     * @return $this
+     */
+    protected function handleFileDownloading() : self
+    {
 
+        add_action('plugins_loaded', function() {
+
+            if (wp_verify_nonce(
+                $_POST['epserts-template-download-wpnp'],
+                'epserts-template-download'
+            ) === false) $this->adminNotify(
+                'danger',
+                $this->form_failed_text
+            );
+            else {
+
+                $template_settings = new TemplateSettings(
+                    new SertificateSettings($this->wpdb),
+                    $this->path
+                );
+
+                $content = $template_settings->getTemplateContent();
+
+                header('Content-type: application; charset=utf-8');
+                header('Content-disposition: attachment; filename='.$template_settings->getTemplateFilename());
+
+                echo $content;
+
+                die;
+
+            }
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Create admin notice.
+     * 
+     * @param string $type
+     * Available types: 'success', 'warning', 'danger' (== 'error').
+     * 
+     * @param string $text
+     * Notice text.
+     * 
+     * @return $this
+     */
     protected function adminNotify(string $type, string $text) : self
     {
 

@@ -3,7 +3,34 @@
     <h1 class="h3 text-center my-5">Настройки сертификата участника</h1>
     <div class="centered-column-400">
         <h4 class="my-3 text-center">Загрузка файла шаблона</h4>
-        <p class="text-center">Файл загружен: <?= apply_filters('epserts-file-uploaded', 'нет') ?>.</p>
+<?php $file_uploaded_answer = apply_filters('epserts-file-uploaded', 'нет') ?>
+        <p class="text-center">
+            Файл загружен: <?= $file_uploaded_answer ?>. 
+<?php
+
+$file_download_form = '';
+
+if ($file_uploaded_answer === 'да') {
+
+?>
+            <a href="javascript:void(0)" onclick="document.getElementById('epserts-template-file-download-form').submit();">Посмотреть</a>
+<?php
+    
+    ob_start();
+
+?>
+        <form action="" method="post" id="epserts-template-file-download-form">
+            <?php wp_nonce_field('epserts-template-download', 'epserts-template-download-wpnp') ?>
+        </form>
+<?php
+
+    $file_download_form = ob_get_clean();
+
+}
+
+?>
+        </p>
+        <?= $file_download_form ?>
         <form action="" method="post" enctype="multipart/form-data">
             <?php wp_nonce_field('epserts-template-upload', 'epserts-template-upload-wpnp') ?>
             <label for="epserts-template-file-upload" class="form-label">Загрузить новый:</label>
