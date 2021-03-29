@@ -29,7 +29,9 @@ class Main
         $this->path = $path;
         $this->url = $url;
 
-        $this->adminPageInit();
+        $this
+            ->adminPageInit()
+            ->shortcodeInit();
 
         if (strpos($_SERVER['REQUEST_URI'], 'wp-admin') !== false &&
             strpos($_GET['page'], $this->admin_page) !== false) {
@@ -499,6 +501,40 @@ class Main
             );
 
             return $template_settings->middlenameGet();
+
+        });
+
+        return $this;
+
+    }
+
+    /**
+     * Shortcode initiation.
+     * 
+     * @return $this
+     */
+    protected function shortcodeInit() : self
+    {
+
+        add_shortcode('epserts-client-download', function($atts, $content) {
+
+            $atts = shortcode_atts([
+                'class' => '',
+                'style' => ''
+            ], $atts);
+
+            if (empty($content)) $content = 'Скачать сертификат';
+
+            ob_start();
+
+?>
+<button class="<?= htmlspecialchars($atts['class']) ?>" style="<?= htmlspecialchars($atts['style']) ?>" onclick="document.getElementById('epserts-client-download-sertificate-form').submit();"><?= htmlspecialchars($content) ?></button>
+<form action="" method="post" id="epserts-client-download-sertificate-form">
+<?php wp_nonce_field('epserts-download-sertificate', 'epserts-download-sertificate-wpnp') ?>
+</form>
+<?php
+
+            return ob_get_clean();
 
         });
 
